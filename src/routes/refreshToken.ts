@@ -27,11 +27,7 @@ refreshRoute.post(
       if (!authRegex.test(authorization) || authorization.split(" ").length !== 2) {
         throw "Bad Request";
       }
-      const base64Token = authorization.split(" ")[1];
-      if (Buffer.from(base64Token, "base64").toString("base64") !== base64Token) {
-        throw "Bad Request";
-      }
-      const token = Buffer.from(base64Token, "base64").toString("utf-8");
+      const token = authorization.split(" ")[1];
       const payload = verify(token, process.env.REFRESH_TOKEN_SECRET!);
       const authPayload = payload as AuthPayload;
       const user = await User.findOne({ where: { id: authPayload.user_id } });
